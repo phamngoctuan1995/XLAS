@@ -179,7 +179,7 @@ void LinhTinh(const Mat& img)
 	imshow("real", fouR*mul);
 	imshow("imag", fouI*mul);
 
-	Mat h = IdealFilter(img.rows, img.cols, 200);
+	Mat h = GaussianFilter(img.rows, img.cols, 50, true);
 	ElementMultiply(fouR, fouI, h);
 
 	Mat resR(img.rows, img.cols, CV_32FC1),
@@ -203,13 +203,10 @@ Mat IdealFilter(int hei, int wid, float D, bool isHigh)
 	for (int j = 0; j < W; ++j)
 	{
 		d = pow(H - i, 2.0F) + pow(W - j, 2.0F);
-		if (d <= D)
+		if ((d <= D && !isHigh) || (d > D && isHigh))
 			res.at<float>(i, j) = res.at<float>(hei - i - 1, wid - j - 1)
 			= res.at<float>(i, wid - j - 1) = res.at<float>(hei - i - 1, j) = 1;
 	}
-
-	if (isHigh)
-		subtract(Mat::ones(hei, wid, CV_32FC1), res, res);
 	return res;
 }
 

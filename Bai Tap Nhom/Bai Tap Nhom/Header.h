@@ -38,5 +38,9 @@ Mat ButterworthFilter(int hei, int wid, float D, float n);
 Mat GaussianFilter(int hei, int wid, float var, bool isHigh = false);
 
 void ElementMultiply(Mat &real, Mat &imag, const Mat &h);
+Mat PCA_RIP(Mat& img, Mat& mean, int m);
+Mat PCA_CV(Mat& img, Mat& mean, int m);
+Mat readImg(const string& link, int tsize);
+void writeImg(const string& link, const Mat& img, int width, int height);
 
 #endif

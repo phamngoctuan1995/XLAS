@@ -29,7 +29,11 @@ Mat GaussianSmooth(const Mat& img, int dim, float sigma);
 */
 Mat GaussianSmooth_CV(const Mat& img, int dim, float sigma);
 
-void LinhTinh(const Mat& img);
+void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI);
+
+void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI);
+
+void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh = false);
 
 Mat IdealFilter(int hei, int wid, float D, bool isHigh = false);
 
@@ -37,7 +41,8 @@ Mat ButterworthFilter(int hei, int wid, float D, float n);
 
 Mat GaussianFilter(int hei, int wid, float var, bool isHigh = false);
 
-void ElementMultiply(Mat &real, Mat &imag, const Mat &h);
+void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, const Mat &h);
+
 Mat PCA_RIP(Mat& img, Mat& mean, int m);
 Mat PCA_CV(Mat& img, Mat& mean, int m);
 Mat readImg(const string& link, int tsize);

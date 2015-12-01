@@ -1,4 +1,4 @@
-#include "Header.h"
+﻿#include "Header.h"
 
 static int MaxDivisor(int x)
 {
@@ -57,7 +57,7 @@ static void Fourier(const Mat& img, Mat& rea, Mat& ima)
 	}
 }
 
-static void Fourier(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
+void Fourier(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
 	int nu, int alpha, int nv, int beta, bool isInv)
 {
 	int hei = img.rows / nu, wid = img.cols / nv;
@@ -104,7 +104,7 @@ static void Fourier(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
 	}
 }
 
-static void FourierFast(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
+void FourierFast(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
 	int nu, int alpha, int nv, int beta, bool isInv)
 {
 	int hei = img.rows / nu, wid = img.cols / nv;
@@ -161,7 +161,7 @@ static void FourierFast(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
 	}
 }
 
-void LinhTinh(const Mat& img)
+void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI)
 {
 	int wid = img.cols, hei = img.rows;
 	int sub1 = DFTSize(wid) - wid;
@@ -172,24 +172,54 @@ void LinhTinh(const Mat& img)
 	if (sub2 > 0)
 		vconcat(sta1, Mat::zeros(sub2, wid + sub1, CV_8UC1), img);
 
-	float mul = img.rows*img.cols;
-	Mat fouR(img.rows, img.cols, CV_32FC1),
-		fouI(img.rows, img.cols, CV_32FC1);
+	fouR = Mat::zeros(img.rows, img.cols, CV_32FC1),
+	fouI = Mat::zeros(img.rows, img.cols, CV_32FC1);
 	FourierFast(img, Mat(), fouR, fouI, 1, 0, 1, 0, false);
-	imshow("real", fouR*mul);
-	imshow("imag", fouI*mul);
+}
 
-	Mat h = GaussianFilter(img.rows, img.cols, 50, true);
-	ElementMultiply(fouR, fouI, h);
-
-	Mat resR(img.rows, img.cols, CV_32FC1),
-		resI(img.rows, img.cols, CV_32FC1);
+void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI)
+{
+	resR = Mat::zeros(fouR.rows, fouR.cols, CV_32FC1),
+	resI = Mat::zeros(fouR.rows, fouR.cols, CV_32FC1);
 	FourierFast(fouR, fouI, resR, resI, 1, 0, 1, 0, true);
-	for (int i = 0; i < img.rows; ++i)
-	for (int j = 0; j < img.cols; ++j)
+	for (int i = 0; i < fouR.rows; ++i)
+	for (int j = 0; j < fouR.cols; ++j)
 	if ((i + j) % 2)
 		resR.at<float>(i, j) *= -1;
-	imshow("test", resR);
+}
+
+void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh)
+{
+	Mat h, resR, resI, tempR, tempI;
+	float D, n;
+
+	cout << "\nIdeal Filter" << endl;
+	cout << "Nhap D: ";
+	cin >> D;
+	h = IdealFilter(fouR.rows, fouR.cols, D, isHigh);
+	ElementMultiply(fouR, fouI, resR, resI, h);
+	FourierNguoc(resR, resI, tempR, tempI);
+	imshow("Ideal Filter", tempR);
+	waitKey(0);
+
+	// ButterworthFilter
+	cout << "\nButterworth Filter" << endl;
+	cout << "Nhap D, n: ";
+	cin >> D >> n;
+	h = ButterworthFilter(fouR.rows, fouR.cols, D, n - 2 * n * isHigh);
+	ElementMultiply(fouR, fouI, resR, resI, h);
+	FourierNguoc(resR, resI, tempR, tempI);
+	imshow("Butterworth Filter", tempR);
+	waitKey(0);
+
+	cout << "\nGaussian Filter" << endl;
+	cout << "Nhap var: ";
+	cin >> D;
+	h = GaussianFilter(fouR.rows, fouR.cols, D, isHigh);
+	ElementMultiply(fouR, fouI, resR, resI, h);
+	FourierNguoc(resR, resI, tempR, tempI);
+	imshow("Gaussian Filter", tempR);
+	waitKey(0);
 }
 
 Mat IdealFilter(int hei, int wid, float D, bool isHigh)
@@ -239,7 +269,7 @@ Mat GaussianFilter(int hei, int wid, float var, bool isHigh)
 	{
 		d = pow(H - i, 2.0F) + pow(W - j, 2.0F);
 		res.at<float>(i, j) = res.at<float>(hei - i - 1, wid - j - 1)
-			= res.at<float>(i, wid - j - 1) = res.at<float>(hei - i - 1, j) = exp(- d / var);
+			= res.at<float>(i, wid - j - 1) = res.at<float>(hei - i - 1, j) = exp(-d / var);
 	}
 
 	if (isHigh)
@@ -247,8 +277,8 @@ Mat GaussianFilter(int hei, int wid, float var, bool isHigh)
 	return res;
 }
 
-void ElementMultiply(Mat &real, Mat &imag, const Mat &h)
+void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, const Mat &h)
 {
-	multiply(real, h, real);
-	multiply(imag, h, imag);
+	multiply(real, h, resR);
+	multiply(imag, h, resI);
 }

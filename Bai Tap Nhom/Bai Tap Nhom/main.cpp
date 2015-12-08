@@ -81,6 +81,9 @@ void run5(Mat& img) {
 			float DCcomponent = fouR.at<float>(fHei/2, fWid/2)*255,
 				RealMean = (float)mean(img)[0];
 			
+			if (abs(DCcomponent - RealMean) <= E)
+				cout << "Thoa tinh chat DC component xap xi gia tri trung binh thuc su";
+
 			bool flag = false;
 			for (int i = 1; i <= fHei/2; ++i)
 			{
@@ -91,7 +94,7 @@ void run5(Mat& img) {
 					break;
 			}
 			if (!flag)
-				cout << "Tinh chat ... thoa" << endl;
+				cout << "Thoa tinh chat doi xung" << endl;
 			
 			cout << "Dinh ly Convolution the hien o Gaussian Filter" << endl;
 

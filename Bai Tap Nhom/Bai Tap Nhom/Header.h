@@ -16,6 +16,7 @@ using namespace cv;
 
 #define PI 3.14159
 #define DFT_MAX 2000
+#define E	0.01
 
 /* Ham lam tron bang toan tu Gaussian
 - img: anh can lam tron

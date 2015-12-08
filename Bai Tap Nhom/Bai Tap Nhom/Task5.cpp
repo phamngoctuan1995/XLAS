@@ -1,4 +1,4 @@
-﻿#include "Header.h"
+#include "Header.h"
 
 static int MaxDivisor(int x)
 {
@@ -15,6 +15,9 @@ static int DFTSize(int n)
 {
 	for (int i = n; i < DFT_MAX; ++i)
 	{
+		if (i % 2)
+			continue;
+		
 		bool flag = false;
 		int thres = (int)sqrt(i*1.0F);
 
@@ -31,30 +34,6 @@ static int DFTSize(int n)
 	}
 
 	return DFT_MAX;
-}
-
-static void Fourier(const Mat& img, Mat& rea, Mat& ima)
-{
-	float hei = img.rows, wid = img.cols,
-		mul = hei*wid;
-
-	for (int i = 0; i < hei; ++i)
-	for (int j = 0; j < wid; ++j)
-	{
-		float sumR = 0, sumI = 0,
-			u = 1.0F*i / hei, v = 1.0F*j / wid;
-		for (int a = 0; a < hei; ++a)
-		for (int b = 0; b < wid; ++b)
-		{
-			float tem = 2 * PI*(u*a + v*b),
-				key = img.at<unsigned char>(a, b) / 255.0F;//
-			sumR += key*cos(tem);//
-			sumI += key*sin(tem);//
-		}
-
-		rea.at<float>(i, j) = sumR / mul;//
-		ima.at<float>(i, j) = -sumI / mul;//
-	}
 }
 
 void Fourier(const Mat& img, const Mat& imgI, Mat& rea, Mat& ima,
@@ -165,16 +144,16 @@ void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI)
 {
 	int wid = img.cols, hei = img.rows;
 	int sub1 = DFTSize(wid) - wid;
-	Mat sta1;
+	Mat sta1, img1;
 	if (sub1 > 0)
 		hconcat(img, Mat::zeros(hei, sub1, CV_8UC1), sta1);
 	int sub2 = DFTSize(hei) - hei;
 	if (sub2 > 0)
-		vconcat(sta1, Mat::zeros(sub2, wid + sub1, CV_8UC1), img);
+		vconcat(sta1, Mat::zeros(sub2, wid + sub1, CV_8UC1), img1);
 
-	fouR = Mat::zeros(img.rows, img.cols, CV_32FC1),
-	fouI = Mat::zeros(img.rows, img.cols, CV_32FC1);
-	FourierFast(img, Mat(), fouR, fouI, 1, 0, 1, 0, false);
+	fouR = Mat::zeros(img1.rows, img1.cols, CV_32FC1),
+	fouI = Mat::zeros(img1.rows, img1.cols, CV_32FC1);
+	FourierFast(img1, Mat(), fouR, fouI, 1, 0, 1, 0, false);
 }
 
 void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI)

@@ -1,16 +1,23 @@
-﻿Build started 12/1/2015 12:26:02 PM.
+﻿Build started 12/8/2015 9:45:47 AM.
      1>Project "D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Bai Tap Nhom\Bai Tap Nhom.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Task5.cpp main.cpp
          main.cpp
+         Task5.cpp
+     1>d:\học tập\hk v\xử lý ảnh số & video số\bai tap nhom\xlas\bai tap nhom\bai tap nhom\task5.cpp(61): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>d:\học tập\hk v\xử lý ảnh số & video số\bai tap nhom\xlas\bai tap nhom\bai tap nhom\task5.cpp(128): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>d:\học tập\hk v\xử lý ảnh số & video số\bai tap nhom\xlas\bai tap nhom\bai tap nhom\task5.cpp(207): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>d:\học tập\hk v\xử lý ảnh số & video số\bai tap nhom\xlas\bai tap nhom\bai tap nhom\task5.cpp(225): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>d:\học tập\hk v\xử lý ảnh số & video số\bai tap nhom\xlas\bai tap nhom\bai tap nhom\task5.cpp(242): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Debug\Bai Tap Nhom.exe" /INCREMENTAL /NOLOGO opencv_highgui2411d.lib opencv_imgproc2411d.lib opencv_video2411d.lib opencv_core2411d.lib opencv_features2d2411d.lib opencv_ml2411d.lib opencv_nonfree2411d.lib opencv_flann2411d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Debug\Bai Tap Nhom.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Debug\Bai Tap Nhom.lib" /MACHINE:X86 Debug\main.obj
          Debug\Task5.obj
          Debug\Task6.obj
-         LINK : program database D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Debug\Bai Tap Nhom.pdb missing; performing full link
+         LINK : D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Debug\Bai Tap Nhom.exe not found or not built by the last incremental link; performing full link
          Bai Tap Nhom.vcxproj -> D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Debug\Bai Tap Nhom.exe
      1>Done Building Project "D:\Học tập\HK V\Xử lý ảnh số & video số\Bai tap nhom\XLAS\Bai Tap Nhom\Bai Tap Nhom\Bai Tap Nhom.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:06.71
+Time Elapsed 00:00:14.90

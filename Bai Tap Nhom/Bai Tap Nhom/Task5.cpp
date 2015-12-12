@@ -144,7 +144,7 @@ void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI)
 {
 	int wid = img.cols, hei = img.rows;
 	int sub1 = DFTSize(wid) - wid;
-	Mat sta1, img1;
+	Mat sta1, img1(img);
 	if (sub1 > 0)
 		hconcat(img, Mat::zeros(hei, sub1, CV_8UC1), sta1);
 	int sub2 = DFTSize(hei) - hei;
@@ -171,7 +171,7 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh)
 {
 	Mat h, resR, resI, tempR, tempI;
 	float D, n;
-
+	
 	cout << "\nIdeal Filter" << endl;
 	cout << "Nhap D: ";
 	cin >> D;
@@ -260,4 +260,42 @@ void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, con
 {
 	multiply(real, h, resR);
 	multiply(imag, h, resI);
+}
+
+void Fourier_OpenCV(Mat src, Mat &des, bool isInv)
+{
+	if (!isInv)
+	{
+		src.convertTo(src, CV_32F);
+		int w = getOptimalDFTSize(src.cols);
+		int h = getOptimalDFTSize(src.rows);
+		copyMakeBorder(src, des, 0, h - src.rows, 0, w - src.cols, BORDER_CONSTANT, Scalar::all(0));
+		Mat planes[] = { Mat_<float>(des), Mat::zeros(des.size(), CV_32F) };
+		merge(planes, 2, des);
+
+		dft(des, des, DFT_COMPLEX_OUTPUT);
+
+		des = des(Rect(0, 0, des.cols & -2, des.rows & -2));
+		int cx = des.cols / 2;
+		int cy = des.rows / 2;
+
+		Mat q0(des, Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
+		Mat q1(des, Rect(cx, 0, cx, cy));  // Top-Right
+		Mat q2(des, Rect(0, cy, cx, cy));  // Bottom-Left
+		Mat q3(des, Rect(cx, cy, cx, cy)); // Bottom-Right
+
+		Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
+		q0.copyTo(tmp);
+		q3.copyTo(q0);
+		tmp.copyTo(q3);
+
+		q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
+		q2.copyTo(q1);
+		tmp.copyTo(q2);
+	}
+	else
+	{
+		dft(src, des, DFT_INVERSE | DFT_SCALE | DFT_REAL_OUTPUT);
+		des.convertTo(des, CV_8U);
+	}
 }

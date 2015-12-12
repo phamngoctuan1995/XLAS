@@ -30,11 +30,7 @@ Mat GaussianSmooth(const Mat& img, int dim, float sigma);
 */
 Mat GaussianSmooth_CV(const Mat& img, int dim, float sigma);
 
-void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI);
-
-void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI);
-
-void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh = false);
+void LinhTinh(const Mat& img);
 
 Mat IdealFilter(int hei, int wid, float D, bool isHigh = false);
 
@@ -42,11 +38,16 @@ Mat ButterworthFilter(int hei, int wid, float D, float n);
 
 Mat GaussianFilter(int hei, int wid, float var, bool isHigh = false);
 
-void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, const Mat &h);
+void Fourier_OpenCV(Mat src, Mat &des, bool isInv = false);
+void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI);
+void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI);
+void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh);
 
-Mat PCA_RIP(Mat& img, Mat& mean, int m);
-Mat PCA_CV(Mat& img, Mat& mean, int m);
+void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, const Mat &h);
+Mat PCA_RIP(Mat& img, int m, int type);
+Mat PCA_RIP_FACE(Mat& img, int m, int type);
+Mat PCA_CV(Mat& img, int m, int type);
 Mat readImg(const string& link, int tsize);
-void writeImg(const string& link, const Mat& img, int width, int height);
+void writeImg(const string& link, const Mat& img, int height, string a);
 
 #endif

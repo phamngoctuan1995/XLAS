@@ -41,7 +41,7 @@ Mat GaussianFilter(int hei, int wid, float var, bool isHigh = false);
 void Fourier_OpenCV(Mat src, Mat &des, bool isInv = false);
 void FourierThuan(const Mat& img, Mat &fouR, Mat &fouI);
 void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI);
-void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh);
+void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHigh);
 
 void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, const Mat &h);
 Mat PCA_RIP(Mat& img, int m, int type);

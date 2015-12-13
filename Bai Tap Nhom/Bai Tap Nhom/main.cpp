@@ -46,6 +46,7 @@ void run5(Mat& img) {
 	while (true)
 	{
 		imshow("Hinh goc", img);
+		waitKey(1);
 		cout << "\n5.1. Phep bien doi Fourier thuan va nghich (su dung thuat toan Cooley-Tukey)." << endl;
 		cout << "5.2. Tinh chat phep bien doi Fourier." << endl;
 		cout << "5.3. Loc thong tin tan so thap dua vao phep bien doi Fourier va dinh ly Convolution." << endl;
@@ -88,14 +89,20 @@ void run5(Mat& img) {
 		case 2:
 		{
 				  if (isFirst)
+				  {
 					  FourierThuan(img, fouR, fouI);
+					  Fourier_OpenCV(img, resO);
+					  split(resO, temp);
+					  fouRO = temp[0];
+					  fouIO = temp[1];
+				  }
 
 				  int fHei = fouR.rows, fWid = fouR.cols;
 				  float DCcomponent = fouR.at<float>(fHei / 2, fWid / 2) * 255,
 					  RealMean = (float)mean(img)[0];
 
 				  if (abs(DCcomponent - RealMean) <= E)
-					  cout << "Thoa tinh chat DC component xap xi gia tri trung binh thuc su";
+					  cout << "Thoa tinh chat DC component xap xi gia tri trung binh thuc su" << endl;
 
 				  bool flag = false;
 				  for (int i = 1; i <= fHei / 2; ++i)
@@ -120,8 +127,15 @@ void run5(Mat& img) {
 		}
 		case 3: // Lọc tần số thấp
 			if (isFirst)
+			{
 				FourierThuan(img, fouR, fouI);
-			FourierFilter(fouR, fouI, false);
+				Fourier_OpenCV(img, resO);
+				split(resO, temp);
+				fouRO = temp[0];
+				fouIO = temp[1];
+			}
+
+			FourierFilter(fouR, fouI, resO, false);
 			if (waitKey(0) == 27){
 				destroyAllWindows();
 				return;
@@ -131,8 +145,14 @@ void run5(Mat& img) {
 
 		case 4: // Lọc tần số cao
 			if (isFirst)
+			{
 				FourierThuan(img, fouR, fouI);
-			FourierFilter(fouR, fouI, true);
+				Fourier_OpenCV(img, resO);
+				split(resO, temp);
+				fouRO = temp[0];
+				fouIO = temp[1];
+			}
+			FourierFilter(fouR, fouI, resO, true);
 			if (waitKey(0) == 27){
 				destroyAllWindows();
 				return;
@@ -151,8 +171,10 @@ void run5(Mat& img) {
 
 void run6(Mat& img) {
 	int choice;
-	while (1)
+	while (true)
 	{
+		imshow("Hinh goc", img);
+		waitKey(1);
 		cout << "\n6.1.Phan tich thanh phan chinh." << endl;
 		cout << "6.2.Rut trich dac trung cho tap anh mat nguoi dua vao phan tich thanh phan chinh.\n" << endl;
 
@@ -287,6 +309,7 @@ void run(Mat& img) {
 	while (true)
 	{
 		imshow("Hinh goc", img);
+		waitKey(1);
 		cout << "\nNhom tac vu 05 - Phep bien doi Fourier." << endl;
 		cout << "Nhom tac vu 06 - Phep bien doi Karhunen-Loeve." << endl;
 		cout << "Nhom tac vu 07 - Phan doan anh." << endl;

@@ -167,20 +167,30 @@ void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI)
 		resR.at<float>(i, j) *= -1;
 }
 
-void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh)
+void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHigh)
 {
 	Mat h, resR, resI, tempR, tempI;
+	Mat fouO[2];
 	float D, n;
 	
+	split(resO, fouO);
+
 	cout << "\nIdeal Filter" << endl;
 	cout << "Nhap D: ";
 	cin >> D;
 	h = IdealFilter(fouR.rows, fouR.cols, D, isHigh);
 	ElementMultiply(fouR, fouI, resR, resI, h);
 	FourierNguoc(resR, resI, tempR, tempI);
+
+	ElementMultiply(fouO[0], fouO[1], fouO[0], fouO[1], h);
+	merge(fouO, 2, tempI);
+	Fourier_OpenCV(tempI, tempI, true);
+
 	imshow("Ideal Filter", tempR);
+	imshow("Ideal Filter - OpenCV", tempI);
 	waitKey(0);
 
+	split(resO, fouO);
 	// ButterworthFilter
 	cout << "\nButterworth Filter" << endl;
 	cout << "Nhap D, n: ";
@@ -188,16 +198,29 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, bool isHigh)
 	h = ButterworthFilter(fouR.rows, fouR.cols, D, n - 2 * n * isHigh);
 	ElementMultiply(fouR, fouI, resR, resI, h);
 	FourierNguoc(resR, resI, tempR, tempI);
+
+	ElementMultiply(fouO[0], fouO[1], fouO[0], fouO[1], h);
+	merge(fouO, 2, tempI);
+	Fourier_OpenCV(tempI, tempI, true);
+
 	imshow("Butterworth Filter", tempR);
+	imshow("Butterworth Filter - OpenCV", tempI);
 	waitKey(0);
 
+	split(resO, fouO);
 	cout << "\nGaussian Filter" << endl;
 	cout << "Nhap var: ";
 	cin >> D;
 	h = GaussianFilter(fouR.rows, fouR.cols, D, isHigh);
 	ElementMultiply(fouR, fouI, resR, resI, h);
 	FourierNguoc(resR, resI, tempR, tempI);
+
+	ElementMultiply(fouO[0], fouO[1], fouO[0], fouO[1], h);
+	merge(fouO, 2, tempI);
+	Fourier_OpenCV(tempI, tempI, true);
+
 	imshow("Gaussian Filter", tempR);
+	imshow("Gaussian Filter - OpenCV", tempI);
 	waitKey(0);
 }
 

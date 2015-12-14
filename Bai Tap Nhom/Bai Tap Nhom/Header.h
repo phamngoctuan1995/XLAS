@@ -54,5 +54,5 @@ void writeImg(const string& link, const Mat& img, int height, string a);
 Mat RegionGrowing(const Mat& img, float threshold);
 Mat KMeans_RIP(const Mat& img, int k, vector<Point3f>& meanReg);
 
-
+void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point anchor = Point(-1, -1));
 #endif

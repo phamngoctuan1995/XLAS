@@ -85,6 +85,7 @@
     <ClCompile Include="Task5.cpp" />
     <ClCompile Include="Task6.cpp" />
     <ClCompile Include="Task7.cpp" />
+    <ClCompile Include="Task8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

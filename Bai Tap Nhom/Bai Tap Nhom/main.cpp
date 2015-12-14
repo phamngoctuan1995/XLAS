@@ -15,11 +15,11 @@
 8.1. Toán tử hình thái học trên ảnh nhị phân.
 8.2. Toán tử hình thái học trên ảnh độ xám.*/
 
-void run5(Mat& img);
-void run6(Mat& img);
-void run7(Mat& img);
-void run8(Mat& img);
-void run(Mat& img);
+void run5(const Mat &img);
+void run6(const Mat &img);
+void run7(const Mat &img);
+void run8(const Mat &img);
+void run(const Mat &img);
 
 int main() {
 	// Phan chung
@@ -38,7 +38,7 @@ int main() {
 }
 
 
-void run5(Mat& img) {
+void run5(const Mat& img) {
 	char choice;
 	bool isFirst = true;
 	Mat fouR, fouI, resR, resI, resO, fouRO, fouIO, temp[2];
@@ -175,7 +175,7 @@ void run5(Mat& img) {
 	}
 }
 
-void run6(Mat& img) {
+void run6(const Mat& img) {
 	char choice;
 	while (true)
 	{
@@ -241,7 +241,7 @@ void run6(Mat& img) {
 	}
 }
 
-void run7(Mat& img) {
+void run7(const Mat &img) {
 	char choice;
 
 	while (true)
@@ -293,9 +293,9 @@ void run7(Mat& img) {
 	}
 }
 
-void run8(Mat& img) {
+void run8(const Mat &img) {
 	char choice;
-
+	
 	while (true)
 	{
 		imshow("Hinh goc", img);
@@ -309,20 +309,73 @@ void run8(Mat& img) {
 
 		if (choice - '0' <= 0)
 			break;
-		Mat img1, img2;
+		Mat des, element, temp = img.clone();
+		Point anchor;
+		Size size;
 
 		switch (choice - '0') {
 		case 1:
-
-			if (waitKey(0) == 27){
-				destroyAllWindows();
-				return;
-			}
-			destroyAllWindows();
-			break;
-
+			adaptiveThreshold(img, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 3);
+			imshow("Hinh goc", temp);
+			waitKey(1);
 		case 2:
+			cout << "Nhap size element structure (h - w): "; cin >> size.height >> size.width;
+			if (size.height <= 0 || size.width <= 0)
+				break;
 
+			element = getStructuringElement(MORPH_RECT, size);
+
+			Morphology(temp, des, element, MORPH_DILATE);
+			imshow("Dilate", des);
+
+			dilate(temp, des, element);
+			imshow("Dilate - OpenCV", des);
+			waitKey(0);
+
+			Morphology(temp, des, element, MORPH_ERODE);
+			imshow("Erode", des);
+
+			erode(temp, des, element);
+			imshow("Erode - OpenCV", des);
+			waitKey(0);
+
+			Morphology(temp, des, element, MORPH_OPEN);
+			imshow("Open", des);
+
+			morphologyEx(temp, des, MORPH_OPEN, element);
+			imshow("Open - OpenCV", des);
+			waitKey(0);
+
+			Morphology(temp, des, element, MORPH_CLOSE);
+			imshow("Close", des);
+
+			morphologyEx(temp, des, MORPH_CLOSE, element);
+			imshow("Close - OpenCV", des);
+
+			if (choice - '0' == 2)
+			{
+				waitKey(0);
+
+				Morphology(temp, des, element, MORPH_GRADIENT);
+				imshow("Gradient", des);
+
+				morphologyEx(temp, des, MORPH_GRADIENT, element);
+				imshow("Gradient - OpenCV", des);
+				waitKey(0);
+
+				Morphology(temp, des, element, MORPH_TOPHAT);
+				imshow("Top Hat", des);
+
+				morphologyEx(temp, des, MORPH_TOPHAT, element);
+				imshow("Top Hat - OpenCV", des);
+				waitKey(0);
+
+				Morphology(temp, des, element, MORPH_BLACKHAT);
+				imshow("Black Hat", des);
+
+				morphologyEx(temp, des, MORPH_BLACKHAT, element);
+				imshow("Black Hat - OpenCV", des);
+			}
 			if (waitKey(0) == 27){
 				destroyAllWindows();
 				return;
@@ -337,7 +390,7 @@ void run8(Mat& img) {
 	}
 }
 
-void run(Mat& img) {
+void run(const Mat& img) {
 	char choice;
 
 	while (true)

@@ -39,7 +39,7 @@ int main() {
 
 
 void run5(Mat& img) {
-	int choice;
+	char choice;
 	bool isFirst = true;
 	Mat fouR, fouI, resR, resI, resO, fouRO, fouIO, temp[2];
 
@@ -55,10 +55,10 @@ void run5(Mat& img) {
 		cout << "Chon tac vu (0 de thoat): ";
 		cin >> choice;
 
-		if (!choice)
+		if (choice - '0' <= 0)
 			return;
 
-		switch (choice) {
+		switch (choice - '0') {
 		case 1:
 			if (isFirst)
 			{
@@ -102,14 +102,20 @@ void run5(Mat& img) {
 					  RealMean = (float)mean(img)[0];
 
 				  if (abs(DCcomponent - RealMean) <= E)
-					  cout << "Thoa tinh chat DC component xap xi gia tri trung binh thuc su" << endl;
+				  {
+					  cout << "Thoa tinh chat DC component xap xi gia tri trung binh thuc su: " << endl;
+					  cout << "DC component: " << DCcomponent << "; Mean: " << RealMean << endl;
+				  }
 
 				  bool flag = false;
-				  for (int i = 1; i <= fHei / 2; ++i)
+				  for (int i = fHei / 2; i >= 1; --i)
 				  {
-					  for (int j = 1; j < fWid; ++j)
-					  if (flag = (fouR.at<float>(i, j) != fouR.at<float>(fHei - i, fWid - j)))
-						  break;
+					  for (int j = fWid - 1; j >= 1; --j)
+					  {
+						  if (flag = ((abs(fouR.at<float>(i, j) - fouR.at<float>(fHei - i, fWid - j)) > 0.0001) ||
+							  (abs(fouI.at<float>(i, j) + fouI.at<float>(fHei - i, fWid - j)) > 0.0001)))
+							  break;
+					  }
 					  if (flag)
 						  break;
 				  }
@@ -170,7 +176,7 @@ void run5(Mat& img) {
 }
 
 void run6(Mat& img) {
-	int choice;
+	char choice;
 	while (true)
 	{
 		imshow("Hinh goc", img);
@@ -181,17 +187,17 @@ void run6(Mat& img) {
 		cout << "Chon tac vu (0 de thoat): ";
 		cin >> choice;
 
-		if (!choice)
+		if (choice - '0' <= 0)
 			break;
 
-		int m, height, width;
+		unsigned int m, height, width;
 		string link;
 		Mat img1, img2;
 
-		switch (choice) {
+		switch (choice - '0') {
 		case 1:
 			cout << "Nhap so chieu ket qua: "; cin >> m;
-			if (m > img.cols)
+			if (m >= img.cols || m >= img.rows)
 			{
 				cout << "So chieu ket qua phai nho hon so mau" << endl;
 				break;
@@ -212,7 +218,7 @@ void run6(Mat& img) {
 			cout << "Nhap so chieu ket qua: "; cin >> m;
 			img.convertTo(img1, CV_32FC1, 1 / 255.0);
 			img2 = readImg(link, height * width);
-			if (m > img2.cols)
+			if (m >= img.cols || m >= img.rows)
 			{
 				cout << "So chieu ket qua phai nho hon so mau" << endl;
 				break;
@@ -236,75 +242,103 @@ void run6(Mat& img) {
 }
 
 void run7(Mat& img) {
-	cout << "\n7.1. Phuong phap Region Growing." << endl;
-	cout << "7.2.Phuong phap K-Means.\n" << endl;
+	char choice;
 
-	int choice;
-	cout << "Chon tac vu: ";
-	cin >> choice;
+	while (true)
+	{
+		imshow("Hinh goc", img);
+		waitKey(1);
+		cout << "\n7.1. Phuong phap Region Growing." << endl;
+		cout << "7.2. Phuong phap K-Means.\n" << endl;
 
-	Mat img1, img2;
+		cout << "Chon tac vu (0 de thoat): ";
+		cin >> choice;
 
-	switch (choice) {
-	case 1:
+		if (choice - '0' <= 0)
+			break;
 
-		if (waitKey(0) == 27){
-			destroyAllWindows();
-			return;
+		Mat img1;
+		switch (choice - '0') {
+		case 1:
+		{
+				  float thres = 50;
+				  cout << "Nhap nguong: "; cin >> thres;
+				  img1 = RegionGrowing(img, abs(thres));
+				  imshow("Region growing", img1);
+				  if (waitKey(0) == 27){
+					  destroyAllWindows();
+					  return;
+				  }
+				  destroyAllWindows();
+				  break;
 		}
-		destroyAllWindows();
-		break;
-
-	case 2:
-
-		if (waitKey(0) == 27){
-			destroyAllWindows();
-			return;
+		case 2:
+		{
+				  unsigned int k = 2;
+				  vector<Point3f> meanReg;
+				  cout << "Nhap k: "; cin >> k;
+				  img1 = KMeans_RIP(img, k, meanReg);
+				  imshow("K Means", img1);
+				  if (waitKey(0) == 27){
+					  destroyAllWindows();
+					  return;
+				  }
+				  destroyAllWindows();
+				  break;
 		}
-		destroyAllWindows();
-		break;
-
-	default:
-		cout << "Tac vu khong ton tai" << endl;
+		default:
+			cout << "Tac vu khong ton tai" << endl;
+		}
+		system("cls");
 	}
 }
 
 void run8(Mat& img) {
-	cout << "\n8.1. Toan tu hinh thai hoc tren anh nhi phan." << endl;
-	cout << "8.2.Toan tu hinh thai hoc trn anh grayscale.\n" << endl;
+	char choice;
 
-	int choice;
-	cout << "Chon tac vu: ";
-	cin >> choice;
+	while (true)
+	{
+		imshow("Hinh goc", img);
+		waitKey(1);
 
-	Mat img1, img2;
+		cout << "\n8.1. Toan tu hinh thai hoc tren anh nhi phan." << endl;
+		cout << "8.2.Toan tu hinh thai hoc trn anh grayscale.\n" << endl;
 
-	switch (choice) {
-	case 1:
+		cout << "Chon tac vu (0 de thoat): ";
+		cin >> choice;
 
-		if (waitKey(0) == 27){
+		if (choice - '0' <= 0)
+			break;
+		Mat img1, img2;
+
+		switch (choice - '0') {
+		case 1:
+
+			if (waitKey(0) == 27){
+				destroyAllWindows();
+				return;
+			}
 			destroyAllWindows();
-			return;
-		}
-		destroyAllWindows();
-		break;
+			break;
 
-	case 2:
+		case 2:
 
-		if (waitKey(0) == 27){
+			if (waitKey(0) == 27){
+				destroyAllWindows();
+				return;
+			}
 			destroyAllWindows();
-			return;
-		}
-		destroyAllWindows();
-		break;
+			break;
 
-	default:
-		cout << "Tac vu khong ton tai" << endl;
+		default:
+			cout << "Tac vu khong ton tai" << endl;
+		}
+		system("cls");
 	}
 }
 
 void run(Mat& img) {
-	int choice;
+	char choice;
 
 	while (true)
 	{
@@ -314,14 +348,14 @@ void run(Mat& img) {
 		cout << "Nhom tac vu 06 - Phep bien doi Karhunen-Loeve." << endl;
 		cout << "Nhom tac vu 07 - Phan doan anh." << endl;
 		cout << "Nhom tac vu 08 - Toan tu hinh thai hoc.\n" << endl;
-
+		
 		cout << "Chon nhom tac vu (0 de thoat): ";
 		cin >> choice;
 
-		if (!choice)
+		if (choice - '0' <= 0)
 			return;
 
-		switch (choice){
+		switch (choice - '0'){
 		case 5:
 			run5(img);
 			break;

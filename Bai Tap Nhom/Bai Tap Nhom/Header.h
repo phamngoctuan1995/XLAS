@@ -18,6 +18,8 @@ using namespace cv;
 #define DFT_MAX 2000
 #define E	0.01
 
+const int nei[][2] = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
+
 /* Ham lam tron bang toan tu Gaussian
 - img: anh can lam tron
 - dim: kich thuoc kernel
@@ -30,12 +32,8 @@ Mat GaussianSmooth(const Mat& img, int dim, float sigma);
 */
 Mat GaussianSmooth_CV(const Mat& img, int dim, float sigma);
 
-void LinhTinh(const Mat& img);
-
 Mat IdealFilter(int hei, int wid, float D, bool isHigh = false);
-
 Mat ButterworthFilter(int hei, int wid, float D, float n);
-
 Mat GaussianFilter(int hei, int wid, float var, bool isHigh = false);
 
 void Fourier_OpenCV(Mat src, Mat &des, bool isInv = false);
@@ -44,10 +42,17 @@ void FourierNguoc(const Mat &fouR, const Mat &fouI, Mat &resR, Mat &resI);
 void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHigh);
 
 void ElementMultiply(const Mat &real, const Mat &imag, Mat &resR, Mat &resI, const Mat &h);
+
+
 Mat PCA_RIP(Mat& img, int m, int type);
 Mat PCA_RIP_FACE(Mat& img, int m, int type);
 Mat PCA_CV(Mat& img, int m, int type);
 Mat readImg(const string& link, int tsize);
 void writeImg(const string& link, const Mat& img, int height, string a);
+
+
+Mat RegionGrowing(const Mat& img, float threshold);
+Mat KMeans_RIP(const Mat& img, int k, vector<Point3f>& meanReg);
+
 
 #endif

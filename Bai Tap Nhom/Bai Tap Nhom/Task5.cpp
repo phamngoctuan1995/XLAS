@@ -1,5 +1,28 @@
 #include "Header.h"
 
+static Mat Shift(const Mat &src)
+{
+	Mat temp = src(Rect(0, 0, src.cols & -2, src.rows & -2)),
+		des = temp.clone();
+	int cx = des.cols / 2;
+	int cy = des.rows / 2;
+
+	Mat q0(des, Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
+	Mat q1(des, Rect(cx, 0, cx, cy));  // Top-Right
+	Mat q2(des, Rect(0, cy, cx, cy));  // Bottom-Left
+	Mat q3(des, Rect(cx, cy, cx, cy)); // Bottom-Right
+
+	Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
+	q0.copyTo(tmp);
+	q3.copyTo(q0);
+	tmp.copyTo(q3);
+
+	q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
+	q2.copyTo(q1);
+	tmp.copyTo(q2);
+	return des;
+}
+
 static int MaxDivisor(int x)
 {
 	if (x < 4)
@@ -173,7 +196,8 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 	Mat fouO[2];
 	float D, n;
 	
-	split(resO, fouO);
+	Mat res = Shift(resO);
+	split(res, fouO);
 
 	cout << "\nIdeal Filter" << endl;
 	cout << "Nhap D: ";
@@ -182,15 +206,17 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 	ElementMultiply(fouR, fouI, resR, resI, h);
 	FourierNguoc(resR, resI, tempR, tempI);
 
+
 	ElementMultiply(fouO[0], fouO[1], fouO[0], fouO[1], h);
 	merge(fouO, 2, tempI);
+	tempI = Shift(tempI);
 	Fourier_OpenCV(tempI, tempI, true);
 
 	imshow("Ideal Filter", tempR);
 	imshow("Ideal Filter - OpenCV", tempI);
 	waitKey(0);
 
-	split(resO, fouO);
+	split(res, fouO);
 	// ButterworthFilter
 	cout << "\nButterworth Filter" << endl;
 	cout << "Nhap D, n: ";
@@ -201,13 +227,14 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 
 	ElementMultiply(fouO[0], fouO[1], fouO[0], fouO[1], h);
 	merge(fouO, 2, tempI);
+	tempI = Shift(tempI);
 	Fourier_OpenCV(tempI, tempI, true);
 
 	imshow("Butterworth Filter", tempR);
 	imshow("Butterworth Filter - OpenCV", tempI);
 	waitKey(0);
 
-	split(resO, fouO);
+	split(res, fouO);
 	cout << "\nGaussian Filter" << endl;
 	cout << "Nhap var: ";
 	cin >> D;
@@ -217,6 +244,7 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 
 	ElementMultiply(fouO[0], fouO[1], fouO[0], fouO[1], h);
 	merge(fouO, 2, tempI);
+	tempI = Shift(tempI);
 	Fourier_OpenCV(tempI, tempI, true);
 
 	imshow("Gaussian Filter", tempR);
@@ -297,24 +325,6 @@ void Fourier_OpenCV(Mat src, Mat &des, bool isInv)
 		merge(planes, 2, des);
 
 		dft(des, des, DFT_COMPLEX_OUTPUT);
-
-		des = des(Rect(0, 0, des.cols & -2, des.rows & -2));
-		int cx = des.cols / 2;
-		int cy = des.rows / 2;
-
-		Mat q0(des, Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
-		Mat q1(des, Rect(cx, 0, cx, cy));  // Top-Right
-		Mat q2(des, Rect(0, cy, cx, cy));  // Bottom-Left
-		Mat q3(des, Rect(cx, cy, cx, cy)); // Bottom-Right
-
-		Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
-		q0.copyTo(tmp);
-		q3.copyTo(q0);
-		tmp.copyTo(q3);
-
-		q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
-		q2.copyTo(q1);
-		tmp.copyTo(q2);
 	}
 	else
 	{

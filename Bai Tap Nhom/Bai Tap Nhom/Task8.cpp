@@ -24,8 +24,16 @@ void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point an
 			for (int k = 0; k < element.cols; ++k)
 			if (element.at<uchar>(h, k))
 			{
-				tempx = i + h - anchor.x;
-				tempy = j + k - anchor.y;
+				if (MORPH_ERODE)
+				{
+					tempx = i + h - anchor.x;
+					tempy = j + k - anchor.y;
+				}
+				else
+				{
+					tempx = i - h + anchor.x;
+					tempy = j - k + anchor.y;
+				}
 
 				if (tempx < 0 || tempx >= src.rows || tempy < 0 || tempy >= src.cols)
 					continue;
@@ -57,5 +65,33 @@ void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point an
 		Morphology(src, dst, element, MORPH_CLOSE, anchor);
 		dst -= src;
 		break;
+	case MORPH_SMOOTH:
+		Morphology(src, temp, element, MORPH_OPEN, anchor);
+		Morphology(temp, dst, element, MORPH_CLOSE, anchor);
+		break;
+	case MORPH_TEXTUAL_SEGMENTATION:
+		Morphology(src, temp, element, MORPH_CLOSE, anchor);
+		Morphology(temp, dst, element, MORPH_OPEN, anchor);
+		break;
+	}
+}
+
+void Skeleton(const Mat &src, Mat &dst, const Mat &element)
+{
+	double min, max;
+	Mat ero = src.clone();
+	Mat open;
+	morphologyEx(ero, open, MORPH_OPEN, element);
+	dst = ero - open;
+
+	while (true)
+	{
+		erode(ero, ero, element);
+		minMaxLoc(ero, &min, &max);
+		if (max == 0)
+			break;
+		morphologyEx(ero, open, MORPH_OPEN, element);
+		dst = dst + (ero - open);
+		threshold(dst, dst, 127, 255, THRESH_BINARY);
 	}
 }

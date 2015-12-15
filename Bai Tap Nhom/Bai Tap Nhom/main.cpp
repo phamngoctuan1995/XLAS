@@ -15,6 +15,13 @@
 8.1. Toán tử hình thái học trên ảnh nhị phân.
 8.2. Toán tử hình thái học trên ảnh độ xám.*/
 
+Mat Scale_CV(const Mat &img, float ratio) {
+	Mat res;
+	Mat mat_scal = getRotationMatrix2D(Point(0, 0), 0, ratio);
+	warpAffine(img, res, mat_scal, img.size());
+	return res;
+}
+
 void run5(const Mat &img);
 void run6(const Mat &img);
 void run7(const Mat &img);
@@ -181,8 +188,8 @@ void run6(const Mat& img) {
 	{
 		imshow("Hinh goc", img);
 		waitKey(1);
-		cout << "\n6.1.Phan tich thanh phan chinh." << endl;
-		cout << "6.2.Rut trich dac trung cho tap anh mat nguoi dua vao phan tich thanh phan chinh.\n" << endl;
+		cout << "\n6.1. Phan tich thanh phan chinh." << endl;
+		cout << "6.2. Rut trich dac trung cho tap anh mat nguoi dua vao phan tich thanh phan chinh." << endl;
 
 		cout << "Chon tac vu (0 de thoat): ";
 		cin >> choice;
@@ -302,7 +309,7 @@ void run8(const Mat &img) {
 		waitKey(1);
 
 		cout << "\n8.1. Toan tu hinh thai hoc tren anh nhi phan." << endl;
-		cout << "8.2.Toan tu hinh thai hoc trn anh grayscale.\n" << endl;
+		cout << "8.2. Toan tu hinh thai hoc tren anh grayscale.\n" << endl;
 
 		cout << "Chon tac vu (0 de thoat): ";
 		cin >> choice;
@@ -312,10 +319,23 @@ void run8(const Mat &img) {
 		Mat des, element, temp = img.clone();
 		Point anchor;
 		Size size;
-
+		vector<int> fre;
+		int gray = 1, n = img.rows * img.cols;
 		switch (choice - '0') {
 		case 1:
-			adaptiveThreshold(img, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 3);
+			fre = vector<int>(256, 0);
+			for (int i = 0; i < img.rows; ++i)
+			for (int j = 0; j < img.cols; ++j)
+				fre[img.at<uchar>(i, j)]++;
+			for (gray; gray < 256; ++gray)
+			{
+				fre[gray] += fre[gray - 1];
+				if (float(fre[gray]) / n >= 0.7)
+					break;
+			}
+
+			//adaptiveThreshold(temp, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 5);
+			threshold(img, temp, gray, 255, THRESH_BINARY_INV | THRESH_OTSU);
 			imshow("Hinh goc", temp);
 			waitKey(1);
 		case 2:
@@ -323,9 +343,32 @@ void run8(const Mat &img) {
 			if (size.height <= 0 || size.width <= 0)
 				break;
 
+			element = getStructuringElement(MORPH_ELLIPSE, size);
+
+			morphologyEx(temp, des, MORPH_CLOSE, element);
+			imshow("Close - OpenCV", des);
+
+			morphologyEx(des, des, MORPH_OPEN, element);
+			imshow("Open - OpenCV", des);
+
+			cout << "Nhap size element structure (h - w): "; cin >> size.height >> size.width;
+			if (size.height <= 0 || size.width <= 0)
+				break;
+
 			element = getStructuringElement(MORPH_RECT, size);
 
-			Morphology(temp, des, element, MORPH_DILATE);
+			for (int i = 1; i < 1000; ++i)
+			{
+				cout << i << endl;
+				dilate(des, des, element);
+				imshow("Res", des);
+				if (waitKey(0) == 27)
+					break;
+			}
+
+			Skeleton(des, des, element);
+			imshow("ske", des);
+			/*Morphology(temp, des, element, MORPH_DILATE);
 			imshow("Dilate", des);
 
 			dilate(temp, des, element);
@@ -348,11 +391,12 @@ void run8(const Mat &img) {
 
 			Morphology(temp, des, element, MORPH_CLOSE);
 			imshow("Close", des);
-
+			
 			morphologyEx(temp, des, MORPH_CLOSE, element);
-			imshow("Close - OpenCV", des);
+			imshow("Close - OpenCV", des);*/
 
-			if (choice - '0' == 2)
+			
+			/*if (choice - '0' == 2)
 			{
 				waitKey(0);
 
@@ -375,7 +419,7 @@ void run8(const Mat &img) {
 
 				morphologyEx(temp, des, MORPH_BLACKHAT, element);
 				imshow("Black Hat - OpenCV", des);
-			}
+			}*/
 			if (waitKey(0) == 27){
 				destroyAllWindows();
 				return;

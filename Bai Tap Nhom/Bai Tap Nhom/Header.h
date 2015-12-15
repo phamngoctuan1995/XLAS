@@ -18,6 +18,9 @@ using namespace cv;
 #define DFT_MAX 2000
 #define E	0.01
 
+#define MORPH_SMOOTH 1000
+#define MORPH_TEXTUAL_SEGMENTATION 1001
+
 const int nei[][2] = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
 
 /* Ham lam tron bang toan tu Gaussian
@@ -55,4 +58,6 @@ Mat RegionGrowing(const Mat& img, float threshold);
 Mat KMeans_RIP(const Mat& img, int k, vector<Point3f>& meanReg);
 
 void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point anchor = Point(-1, -1));
+void Skeleton(const Mat &src, Mat &dst, const Mat &element);
+
 #endif

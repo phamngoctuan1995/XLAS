@@ -59,5 +59,5 @@ Mat KMeans_RIP(const Mat& img, int k, vector<Point3f>& meanReg);
 
 void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point anchor = Point(-1, -1));
 void Skeleton(const Mat &src, Mat &dst, const Mat &element);
-
+void hitmiss(cv::Mat& src, cv::Mat& dst, cv::Mat& kernel);
 #endif

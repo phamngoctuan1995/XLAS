@@ -302,7 +302,7 @@ void run7(const Mat &img) {
 
 void run8(const Mat &img) {
 	char choice;
-	
+
 	while (true)
 	{
 		imshow("Hinh goc", img);
@@ -323,103 +323,55 @@ void run8(const Mat &img) {
 		int gray = 1, n = img.rows * img.cols;
 		switch (choice - '0') {
 		case 1:
-			fre = vector<int>(256, 0);
-			for (int i = 0; i < img.rows; ++i)
-			for (int j = 0; j < img.cols; ++j)
-				fre[img.at<uchar>(i, j)]++;
-			for (gray; gray < 256; ++gray)
-			{
-				fre[gray] += fre[gray - 1];
-				if (float(fre[gray]) / n >= 0.7)
-					break;
-			}
-
-			//adaptiveThreshold(temp, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 5);
-			threshold(img, temp, gray, 255, THRESH_BINARY_INV | THRESH_OTSU);
+			adaptiveThreshold(temp, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 5);
+			//threshold(img, temp, gray, 255, THRESH_BINARY_INV | THRESH_OTSU);
 			imshow("Hinh goc", temp);
 			waitKey(1);
 		case 2:
-			cout << "Nhap size element structure (h - w): "; cin >> size.height >> size.width;
-			if (size.height <= 0 || size.width <= 0)
-				break;
-
-			element = getStructuringElement(MORPH_ELLIPSE, size);
-
-			morphologyEx(temp, des, MORPH_CLOSE, element);
-			imshow("Close - OpenCV", des);
-
-			morphologyEx(des, des, MORPH_OPEN, element);
-			imshow("Open - OpenCV", des);
-
-			cout << "Nhap size element structure (h - w): "; cin >> size.height >> size.width;
-			if (size.height <= 0 || size.width <= 0)
-				break;
-
-			element = getStructuringElement(MORPH_RECT, size);
-
-			for (int i = 1; i < 1000; ++i)
-			{
-				cout << i << endl;
-				dilate(des, des, element);
-				imshow("Res", des);
-				if (waitKey(0) == 27)
-					break;
-			}
-
-			Skeleton(des, des, element);
-			imshow("ske", des);
-			/*Morphology(temp, des, element, MORPH_DILATE);
+			Morphology(temp, des, element, MORPH_DILATE);
 			imshow("Dilate", des);
-
 			dilate(temp, des, element);
 			imshow("Dilate - OpenCV", des);
 			waitKey(0);
 
 			Morphology(temp, des, element, MORPH_ERODE);
 			imshow("Erode", des);
-
 			erode(temp, des, element);
 			imshow("Erode - OpenCV", des);
 			waitKey(0);
 
 			Morphology(temp, des, element, MORPH_OPEN);
 			imshow("Open", des);
-
 			morphologyEx(temp, des, MORPH_OPEN, element);
 			imshow("Open - OpenCV", des);
 			waitKey(0);
 
 			Morphology(temp, des, element, MORPH_CLOSE);
 			imshow("Close", des);
-			
 			morphologyEx(temp, des, MORPH_CLOSE, element);
-			imshow("Close - OpenCV", des);*/
+			imshow("Close - OpenCV", des);
 
-			
-			/*if (choice - '0' == 2)
+
+			if (choice - '0' == 2)
 			{
 				waitKey(0);
-
 				Morphology(temp, des, element, MORPH_GRADIENT);
 				imshow("Gradient", des);
-
 				morphologyEx(temp, des, MORPH_GRADIENT, element);
 				imshow("Gradient - OpenCV", des);
 				waitKey(0);
 
 				Morphology(temp, des, element, MORPH_TOPHAT);
 				imshow("Top Hat", des);
-
 				morphologyEx(temp, des, MORPH_TOPHAT, element);
 				imshow("Top Hat - OpenCV", des);
 				waitKey(0);
 
 				Morphology(temp, des, element, MORPH_BLACKHAT);
 				imshow("Black Hat", des);
-
 				morphologyEx(temp, des, MORPH_BLACKHAT, element);
 				imshow("Black Hat - OpenCV", des);
-			}*/
+			}
 			if (waitKey(0) == 27){
 				destroyAllWindows();
 				return;
@@ -445,7 +397,7 @@ void run(const Mat& img) {
 		cout << "Nhom tac vu 06 - Phep bien doi Karhunen-Loeve." << endl;
 		cout << "Nhom tac vu 07 - Phan doan anh." << endl;
 		cout << "Nhom tac vu 08 - Toan tu hinh thai hoc.\n" << endl;
-		
+
 		cout << "Chon nhom tac vu (0 de thoat): ";
 		cin >> choice;
 

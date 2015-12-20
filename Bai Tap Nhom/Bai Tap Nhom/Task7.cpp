@@ -174,3 +174,26 @@ Mat RegionGrowing(const Mat& img, float threshold)
 	//cout << count << endl;
 	return reg;
 }
+
+Mat KMeans_CV(const Mat& img, int k, Mat& meanReg)
+{
+	Mat data = Mat::zeros(img.rows*img.cols, 3, CV_32FC1), label;
+	for (int i = 0; i < img.rows; ++i)
+	for (int j = 0; j < img.cols; ++j)
+	{
+		int pos = i*img.cols + j;
+		data.at<float>(pos, 0) = float(i) / img.rows;
+		data.at<float>(pos, 1) = float(j) / img.cols;
+		data.at<float>(pos, 2) = img.at<uchar>(i, j) / 255.0;
+	}
+
+	kmeans(data, k, label, TermCriteria(), 1, KMEANS_RANDOM_CENTERS, meanReg);
+
+	Mat res = Mat::zeros(img.rows, img.cols, CV_8UC1);
+	for (int i = img.rows*img.cols - 1; i >= 0; --i)
+		res.at<uchar>(i / img.cols, i % img.cols) = label.at<int>(i);
+
+	/*imshow("cv", res*(255/k));
+	waitKey(0);*/
+	return res*(255 / k);
+}

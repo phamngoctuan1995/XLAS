@@ -286,6 +286,9 @@ void run7(const Mat &img) {
 				  cout << "Nhap k: "; cin >> k;
 				  img1 = KMeans_RIP(img, k, meanReg);
 				  imshow("K Means", img1);
+
+				  img1 = KMeans_CV(img, k, Mat());
+				  imshow("K Means - OpenCV", img1);
 				  if (waitKey(0) == 27){
 					  destroyAllWindows();
 					  return;

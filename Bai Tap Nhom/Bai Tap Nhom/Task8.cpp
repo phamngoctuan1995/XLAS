@@ -68,43 +68,6 @@ void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point an
 	}
 }
 
-void Skeleton(const Mat &src, Mat &dst, const Mat &element)
-{
-	double min, max;
-	Mat ero;
-	cv::normalize(src, ero, 0, 1, cv::NORM_MINMAX);
-	Mat open;
-	morphologyEx(ero, open, MORPH_OPEN, element);
-	open = 1 - open;
-	dst = ero & open;
-
-	while (true)
-	{
-		erode(ero, ero, element);
-		minMaxLoc(ero, &min, &max);
-		if (max == 0)
-			break;
-		morphologyEx(ero, open, MORPH_OPEN, element);
-		open = 1 - open;
-		dst = dst | (ero & open);
-	}
-}
-
-void hitmiss(Mat& src, Mat& dst, const Mat& kernel)
-{
-	CV_Assert(src.type() == CV_8U && src.channels() == 1);
-
-	cv::Mat k1 = (kernel == 1) / 255;
-	cv::Mat k2 = (kernel == -1) / 255;
-
-	cv::normalize(src, src, 0, 1, cv::NORM_MINMAX);
-
-	cv::Mat e1, e2;
-	cv::erode(src, e1, k1);
-	cv::erode(1 - src, e2, k2);
-	dst = e1 & e2;
-}
-
 void SmoothOperatorOpenCV(Mat src, Mat &des, const Mat &element, Point anchor)
 {
 	if (anchor.x < 0 || anchor.x >= element.rows || anchor.y < 0 || anchor.y >= element.cols)

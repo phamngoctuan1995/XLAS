@@ -317,14 +317,16 @@ void run8(const Mat &img) {
 		if (choice - '0' <= 0)
 			break;
 		Mat des, element, temp = img.clone();
-		Point anchor;
 		Size size;
-		vector<int> fre;
-		int gray = 1, n = img.rows * img.cols;
+		cout << "Nhap kich thuoc Element structure (h-w)"; cin >> size.height >> size.width;
+		if (size.width <= 0 || size.height <= 0)
+			continue;
+
+		element = getStructuringElement(MORPH_RECT, size);
 		switch (choice - '0') {
 		case 1:
-			adaptiveThreshold(temp, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 5);
-			//threshold(img, temp, gray, 255, THRESH_BINARY_INV | THRESH_OTSU);
+			//adaptiveThreshold(temp, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 5);
+			threshold(img, temp, 127, 255, THRESH_BINARY_INV | THRESH_OTSU);
 			imshow("Hinh goc", temp);
 			waitKey(1);
 		case 2:
@@ -371,6 +373,18 @@ void run8(const Mat &img) {
 				imshow("Black Hat", des);
 				morphologyEx(temp, des, MORPH_BLACKHAT, element);
 				imshow("Black Hat - OpenCV", des);
+				waitKey(0);
+
+				Morphology(temp, des, element, MORPH_SMOOTH);
+				imshow("Smooth operator", des);
+				SmoothOperatorOpenCV(temp, des, element);
+				imshow("Smooth oparator - OpenCV", des);
+				waitKey(0);
+
+				Morphology(temp, des, element, MORPH_TEXTUAL_SEGMENTATION);
+				imshow("Textual Segmentation", des);
+				TextualSegmentationOpenCV(temp, des, element);
+				imshow("Textual Segmentation - OpenCV", des);
 			}
 			if (waitKey(0) == 27){
 				destroyAllWindows();

@@ -24,16 +24,8 @@ void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point an
 			for (int k = 0; k < element.cols; ++k)
 			if (element.at<uchar>(h, k))
 			{
-				if (MORPH_ERODE)
-				{
 					tempx = i + h - anchor.x;
 					tempy = j + k - anchor.y;
-				}
-				else
-				{
-					tempx = i - h + anchor.x;
-					tempy = j - k + anchor.y;
-				}
 
 				if (tempx < 0 || tempx >= src.rows || tempy < 0 || tempy >= src.cols)
 					continue;
@@ -111,4 +103,28 @@ void hitmiss(Mat& src, Mat& dst, const Mat& kernel)
 	cv::erode(src, e1, k1);
 	cv::erode(1 - src, e2, k2);
 	dst = e1 & e2;
+}
+
+void SmoothOperatorOpenCV(Mat src, Mat &des, const Mat &element, Point anchor)
+{
+	if (anchor.x < 0 || anchor.x >= element.rows || anchor.y < 0 || anchor.y >= element.cols)
+	{
+		anchor.x = element.rows / 2;
+		anchor.y = element.cols / 2;
+	}
+
+	morphologyEx(src, des, MORPH_OPEN, element, anchor);
+	morphologyEx(des, des, MORPH_CLOSE, element, anchor);
+}
+
+void TextualSegmentationOpenCV(Mat src, Mat &des, const Mat &element, Point anchor)
+{
+	if (anchor.x < 0 || anchor.x >= element.rows || anchor.y < 0 || anchor.y >= element.cols)
+	{
+		anchor.x = element.rows / 2;
+		anchor.y = element.cols / 2;
+	}
+
+	morphologyEx(src, des, MORPH_CLOSE, element, anchor);
+	morphologyEx(des, des, MORPH_OPEN, element, anchor);
 }

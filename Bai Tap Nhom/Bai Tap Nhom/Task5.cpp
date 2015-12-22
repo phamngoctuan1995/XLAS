@@ -214,6 +214,16 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 
 	imshow("Ideal Filter", tempR);
 	imshow("Ideal Filter - OpenCV", tempI);
+	if (isHigh)
+	{
+		imwrite("Hinh\\High-pass Ideal Filter.jpg", tempR * 255);
+		imwrite("Hinh\\High-pass Ideal Filter - OpenCV.jpg", tempI);
+	}
+	else
+	{
+		imwrite("Hinh\\Low-pass Ideal Filter.jpg", tempR * 255);
+		imwrite("Hinh\\Low-pass Ideal Filter - OpenCV.jpg", tempI);
+	}
 	waitKey(0);
 
 	split(res, fouO);
@@ -232,6 +242,16 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 
 	imshow("Butterworth Filter", tempR);
 	imshow("Butterworth Filter - OpenCV", tempI);
+	if (isHigh)
+	{
+		imwrite("Hinh\\High-pass Butterworth Filter.jpg", tempR * 255);
+		imwrite("Hinh\\High-pass Butterworth Filter - OpenCV.jpg", tempI);
+	}
+	else
+	{
+		imwrite("Hinh\\Low-pass Butterworth Filter.jpg", tempR * 255);
+		imwrite("Hinh\\Low-pass Butterworth Filter - OpenCV.jpg", tempI);
+	}
 	waitKey(0);
 
 	split(res, fouO);
@@ -249,6 +269,16 @@ void FourierFilter(const Mat &fouR, const Mat &fouI, const Mat &resO, bool isHig
 
 	imshow("Gaussian Filter", tempR);
 	imshow("Gaussian Filter - OpenCV", tempI);
+	if (isHigh)
+	{
+		imwrite("Hinh\\High-pass Gaussian Filter.jpg", tempR * 255);
+		imwrite("Hinh\\High-pass Gaussian Filter - OpenCV.jpg", tempI);
+	}
+	else
+	{
+		imwrite("Hinh\\Low-pass Gaussian Filter.jpg", tempR * 255);
+		imwrite("Hinh\\Low-pass Gaussian Filter - OpenCV.jpg", tempI);
+	}
 	waitKey(0);
 }
 

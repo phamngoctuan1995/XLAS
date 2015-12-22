@@ -1,0 +1,5 @@
+﻿Fourier:
+	Real
+	Imag
+Phân đoạn ảnh:
+	K Mean

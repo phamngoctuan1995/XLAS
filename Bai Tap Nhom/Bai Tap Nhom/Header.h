@@ -19,7 +19,7 @@ using namespace cv;
 #define E	0.01
 
 #define MORPH_SMOOTH 1000
-#define MORPH_TEXTUAL_SEGMENTATION 1001
+#define MORPH_TEXTURAL_SEGMENTATION 1001
 
 const int nei[][2] = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
 

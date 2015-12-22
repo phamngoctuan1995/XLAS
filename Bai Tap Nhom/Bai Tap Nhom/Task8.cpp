@@ -61,7 +61,7 @@ void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point an
 		Morphology(src, temp, element, MORPH_OPEN, anchor);
 		Morphology(temp, dst, element, MORPH_CLOSE, anchor);
 		break;
-	case MORPH_TEXTUAL_SEGMENTATION:
+	case MORPH_TEXTURAL_SEGMENTATION:
 		Morphology(src, temp, element, MORPH_CLOSE, anchor);
 		Morphology(temp, dst, element, MORPH_OPEN, anchor);
 		break;

@@ -76,15 +76,26 @@ void run5(const Mat& img) {
 				fouIO = temp[1];
 			}
 			imshow("real", fouR * fouR.rows * fouR.cols);
+			imwrite("Hinh\\Fourier real.jpg", fouR * fouR.rows * fouR.cols * 255);
+
 			imshow("imag", fouI * fouI.rows * fouI.cols);
+			imwrite("Hinh\\Fourier imag.jpg", fouI * fouI.rows * fouI.cols * 255);
+
 			imshow("real - OpenCV", fouRO);
+			imwrite("Hinh\\Fourier real - OpenCV.jpg", fouRO);
+
 			imshow("imag - OpenCV", fouIO);
+			imwrite("Hinh\\Fourier imag - OpenCV.jpg", fouIO);
+
 
 			FourierNguoc(fouR, fouI, resR, resI);
 			imshow("Fourier Nguoc", resR);
+			imwrite("Hinh\\Fourier Nguoc.jpg", resR * 255);
 
 			Fourier_OpenCV(resO, resI, true);
 			imshow("Fourier Nguoc - OpenCV", resI);
+			imwrite("Hinh\\Fourier Nguoc - OpenCV.jpg", resI);
+
 
 			if (waitKey(0) == 27){
 				destroyAllWindows();
@@ -210,8 +221,14 @@ void run6(const Mat& img) {
 				break;
 			}
 			img.convertTo(img1, CV_32FC1, 1 / 255.0);
-			imshow("PCA_RIP", PCA_RIP(PCA_RIP(img1, m, 0), 0, 2));
-			imshow("PCA_CV", PCA_CV(PCA_CV(img1, m, 0), 0, 2));
+			img2 = PCA_RIP(PCA_RIP(img1, m, 0), 0, 2);
+			imshow("PCA_RIP", img2);
+			imwrite("Hinh\\PCA_RIP.jpg", img2 * 255);
+
+			img2 = PCA_CV(PCA_CV(img1, m, 0), 0, 2);
+			imshow("PCA_CV", img2);
+			imwrite("Hinh\\PCA_CV.jpg", img2 * 255);
+
 			if (waitKey(0) == 27){
 				destroyAllWindows();
 				return;
@@ -245,6 +262,7 @@ void run6(const Mat& img) {
 		default:
 			cout << "Tac vu khong ton tai" << endl;
 		}
+		system("cls");
 	}
 }
 
@@ -272,6 +290,8 @@ void run7(const Mat &img) {
 				  cout << "Nhap nguong: "; cin >> thres;
 				  img1 = RegionGrowing(img, abs(thres));
 				  imshow("Region growing", img1);
+				  imwrite("Hinh\\Region growing.jpg", img1);
+
 				  if (waitKey(0) == 27){
 					  destroyAllWindows();
 					  return;
@@ -286,9 +306,12 @@ void run7(const Mat &img) {
 				  cout << "Nhap k: "; cin >> k;
 				  img1 = KMeans_RIP(img, k, meanReg);
 				  imshow("K Means", img1);
+				  imwrite("Hinh\\K Means.jpg", img1);
 
 				  img1 = KMeans_CV(img, k, Mat());
 				  imshow("K Means - OpenCV", img1);
+				  imwrite("Hinh\\K Means - OpenCV.jpg", img1);
+
 				  if (waitKey(0) == 27){
 					  destroyAllWindows();
 					  return;
@@ -331,30 +354,48 @@ void run8(const Mat &img) {
 			//adaptiveThreshold(temp, temp, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 11, 5);
 			threshold(img, temp, 127, 255, THRESH_BINARY_INV | THRESH_OTSU);
 			imshow("Hinh goc", temp);
+			imwrite("Hinh\\Hinh goc Binary.jpg", temp);
+
 			waitKey(1);
 		case 2:
 			Morphology(temp, des, element, MORPH_DILATE);
 			imshow("Dilate", des);
+			imwrite("Hinh\\Binary Dilate.jpg", des);
+
 			dilate(temp, des, element);
 			imshow("Dilate - OpenCV", des);
+			imwrite("Hinh\\Binary Dilate - OpenCV.jpg", des);
+
 			waitKey(0);
 
 			Morphology(temp, des, element, MORPH_ERODE);
 			imshow("Erode", des);
+			imwrite("Hinh\\Binary Erode.jpg", des);
+
 			erode(temp, des, element);
 			imshow("Erode - OpenCV", des);
+			imwrite("Hinh\\Binary Erode - OpenCV.jpg", des);
+
 			waitKey(0);
 
 			Morphology(temp, des, element, MORPH_OPEN);
 			imshow("Open", des);
+			imwrite("Hinh\\Binary Open.jpg", des);
+
 			morphologyEx(temp, des, MORPH_OPEN, element);
 			imshow("Open - OpenCV", des);
+			imwrite("Hinh\\Binary Open - OpenCV.jpg", des);
+
 			waitKey(0);
 
 			Morphology(temp, des, element, MORPH_CLOSE);
 			imshow("Close", des);
+			imwrite("Hinh\\Binary Close.jpg", des);
+
 			morphologyEx(temp, des, MORPH_CLOSE, element);
 			imshow("Close - OpenCV", des);
+			imwrite("Hinh\\Binary Close - OpenCV.jpg", des);
+
 
 
 			if (choice - '0' == 2)
@@ -362,32 +403,20 @@ void run8(const Mat &img) {
 				waitKey(0);
 				Morphology(temp, des, element, MORPH_GRADIENT);
 				imshow("Gradient", des);
+				imwrite("Hinh\\Gradient.jpg", des);
+
 				morphologyEx(temp, des, MORPH_GRADIENT, element);
 				imshow("Gradient - OpenCV", des);
+				imwrite("Hinh\\Gradient - OpenCV.jpg", des);
 				waitKey(0);
 
 				Morphology(temp, des, element, MORPH_TOPHAT);
 				imshow("Top Hat", des);
+				imwrite("Hinh\\Top Hat.jpg", des);
+
 				morphologyEx(temp, des, MORPH_TOPHAT, element);
 				imshow("Top Hat - OpenCV", des);
-				waitKey(0);
-
-				Morphology(temp, des, element, MORPH_BLACKHAT);
-				imshow("Black Hat", des);
-				morphologyEx(temp, des, MORPH_BLACKHAT, element);
-				imshow("Black Hat - OpenCV", des);
-				waitKey(0);
-
-				Morphology(temp, des, element, MORPH_SMOOTH);
-				imshow("Smooth operator", des);
-				SmoothOperatorOpenCV(temp, des, element);
-				imshow("Smooth oparator - OpenCV", des);
-				waitKey(0);
-
-				Morphology(temp, des, element, MORPH_TEXTUAL_SEGMENTATION);
-				imshow("Textual Segmentation", des);
-				TextualSegmentationOpenCV(temp, des, element);
-				imshow("Textual Segmentation - OpenCV", des);
+				imwrite("Hinh\\Top Hat - OpenCV.jpg", des);
 			}
 			if (waitKey(0) == 27){
 				destroyAllWindows();
@@ -409,6 +438,8 @@ void run(const Mat& img) {
 	while (true)
 	{
 		imshow("Hinh goc", img);
+		imwrite("Hinh\\Hinh goc.jpg", img);
+
 		waitKey(1);
 		cout << "\nNhom tac vu 05 - Phep bien doi Fourier." << endl;
 		cout << "Nhom tac vu 06 - Phep bien doi Karhunen-Loeve." << endl;

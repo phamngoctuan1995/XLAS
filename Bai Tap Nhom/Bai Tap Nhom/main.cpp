@@ -344,7 +344,7 @@ void run8(const Mat &img) {
 			break;
 		Mat des, element, temp = img.clone();
 		Size size;
-		cout << "Nhap kich thuoc Element structure (h-w)"; cin >> size.height >> size.width;
+		cout << "Nhap kich thuoc Element structure (h-w): "; cin >> size.height >> size.width;
 		if (size.width <= 0 || size.height <= 0)
 			continue;
 
@@ -417,6 +417,57 @@ void run8(const Mat &img) {
 				morphologyEx(temp, des, MORPH_TOPHAT, element);
 				imshow("Top Hat - OpenCV", des);
 				imwrite("Hinh\\Top Hat - OpenCV.jpg", des);
+
+				waitKey(0);
+				destroyAllWindows();
+
+				temp = imread("s.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+				if (temp.data == NULL)
+					break;
+				imshow("Hinh goc - Textural", temp);
+				waitKey(1);
+
+				cout << endl << "Chu y: Textural chay kha lau (3 phut)";
+				des = Textural(temp, 21, 51, 3);
+				imshow("Textural", des);
+				imwrite("Hinh\\Textural.jpg", des);
+
+				des = TexturalOpenCV(temp, 21, 105, 3);
+				imshow("Textural - OpenCV", des);
+				imwrite("Hinh\\Textural - OpenCV.jpg", des);
+				waitKey(0);
+				destroyAllWindows();
+
+				temp = imread("r.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+				imshow("Hinh goc", temp);
+				waitKey(1);
+
+				cout << endl << "Chu y: Granulometry chay kha lau (7 phut)";
+				des = Granulometry(img, 20);
+				des = drawHist(des, 512, 400);
+				imshow("Granulometry", des);
+				imwrite("Hinh\\Granulometry.jpg", des);
+				des = GranulometryOpenCV(img, 100);
+				des = drawHist(des, 512, 400);
+				imshow("Granulometry - OpenCV", des);
+				imwrite("Hinh\\Granulometry - OpenCV.jpg", des);
+				waitKey(0);
+
+
+				des = OpenRec(img, 10);
+				imshow("OpenRec", des);
+				imwrite("Hinh\\OpenRec.jpg", des);
+				des = OpenRecOpenCV(img, 10);
+				imshow("OpenRec - OpenCV", des);
+				imwrite("Hinh\\OpenRec - OpenCV.jpg", des);
+				waitKey(0);
+
+				des = CloseRec(img, 10);
+				imshow("CloseRec", des);
+				imwrite("Hinh\\CloseRec.jpg", des);
+				des = CloseRecOpenCV(img, 10);
+				imshow("CloseRec - OpenCv", des);
+				imwrite("Hinh\\CloseRec - OpenCV.jpg", des);
 			}
 			if (waitKey(0) == 27){
 				destroyAllWindows();

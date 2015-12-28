@@ -3,3 +3,6 @@
 	Imag
 Phân đoạn ảnh:
 	K Mean
+Morphology:
+	Textural
+	Granulometry

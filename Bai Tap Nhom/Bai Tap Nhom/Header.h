@@ -19,7 +19,6 @@ using namespace cv;
 #define E	0.01
 
 #define MORPH_SMOOTH 1000
-#define MORPH_TEXTURAL_SEGMENTATION 1001
 
 const int nei[][2] = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
 
@@ -58,7 +57,19 @@ Mat RegionGrowing(const Mat& img, float threshold);
 Mat KMeans_RIP(const Mat& img, int k, vector<Point3f>& meanReg);
 Mat KMeans_CV(const Mat& img, int k, Mat& meanReg);
 
-void Morphology(const Mat &src, Mat &dst, const Mat &element, int type, Point anchor = Point(-1, -1));
+void Morphology(Mat src, Mat &dst, const Mat &element, int type, Point anchor = Point(-1, -1));
 void SmoothOperatorOpenCV(Mat src, Mat &des, const Mat &element, Point anchor = Point(-1, -1));
-void TextualSegmentationOpenCV(Mat src, Mat &des, const Mat &element, Point anchor = Point(-1, -1));
+Mat TexturalOpenCV(const Mat &img, int firstRad, int secondRad, int thirdRad);
+Mat Textural(const Mat &img, int firstRad, int secondRad, int thirdRad);
+Mat GranulometryOpenCV(const Mat& img, int threshold);
+Mat Granulometry(const Mat& img, int threshold);
+Mat DilateRecOpenCV(const Mat& mask, const Mat& marker);
+Mat DilateRec(const Mat& mask, const Mat& marker);
+Mat ErodeRecOpenCV(const Mat& mask, const Mat& marker);
+Mat ErodeRec(const Mat& mask, const Mat& marker);;
+Mat OpenRecOpenCV(const Mat& img, int num);
+Mat OpenRec(const Mat& img, int num);
+Mat CloseRecOpenCV(const Mat& img, int num);
+Mat CloseRec(const Mat& img, int num);
+Mat drawHist(Mat hist, int hist_w, int hist_h);
 #endif
